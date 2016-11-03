@@ -5,6 +5,8 @@
 *.swo
 *.sw*
 
+*.avi
+
 ./
 old/
 !*.py
