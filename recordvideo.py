@@ -32,45 +32,53 @@ class Record:
         self.now = self.now.strftime("%Y%m%d_%H-%M-%S")
         self.host = platform.uname()[1]
 
-        print("Now: {}".format(self.now))
-        print("PC name: {}".format(self.host))
+        print("Now/Sekarang: {}".format(self.now))
+        print("PC name/Nama PC: {}".format(self.host))
+        print("")
+
+        # OpenCV バージョン差の吸収
+        cv_ver = cv2.__version__
+        if cv_ver[0] == "2":
+            cvf = cv2.cv.CV_FOURCC
+        else:
+            cvf = cv2.VideoWriter_fourcc
 
         if os.name != "nt":
-            self.fourcc = cv2.cv.CV_FOURCC('m', 'p', '4', 'v')
+            self.cvf.fourcc = ("m", "p", "4", "v")
 
         elif os.name == "nt":
-            # fourccs = [  #{{{
-            #         cv2.VideoWriter_fourcc(*"DIB "),  # No compress
-            #         cv2.VideoWriter_fourcc(*"PIM1"),  # MPEG-1
-            #         cv2.VideoWriter_fourcc(*"MJPG"),  # Motion-JPEG
-            #                                           # (Not so good)
-            #         cv2.VideoWriter_fourcc(*"MP42"),  # MPEG-4.2
-            #         cv2.VideoWriter_fourcc(*"DIV3"),  # MPEG-4.3
-            #         cv2.VideoWriter_fourcc(*"DIVX"),  # MPEG-4
-            #         cv2.VideoWriter_fourcc(*"U263"),  # H263
-            #         cv2.VideoWriter_fourcc(*"I263"),  # H263I
-            #         cv2.VideoWriter_fourcc(*"FLV1"),  # FLV1
-            #
-            #         cv2.VideoWriter_fourcc(*"MP4V"),
-            #         # cv2.VideoWriter_fourcc(*"MP4S"),
-            #         # cv2.VideoWriter_fourcc(*"XVID")
-            #
-            #         -1                                # Show dialog
-            #
-            #         ]
-            #
-            # # http://www.fourcc.org/codecs.php
-            # }}}
+            fourccs = [
+                    # {{{
+                    cvf(*"DIB "),  # No compress
+                    cvf(*"PIM1"),  # MPEG-1
+                    cvf(*"MJPG"),  # Motion-JPEG
+                                   # (Not so good)
+                    cvf(*"MP42"),  # MPEG-4.2
+                    cvf(*"DIV3"),  # MPEG-4.3
+                    cvf(*"DIVX"),  # MPEG-4
+                    cvf(*"U263"),  # H263
+                    cvf(*"I263"),  # H263I
+                    cvf(*"FLV1"),  # FLV1
 
-            # self.fourcc = 1
-            # self.fourcc = fourccs[-2]
-            # self.fourcc = fourccs[1]
-            self.fourcc = cv2.VideoWriter_fourcc(*"PIM1")
+                    cvf(*"MP4V"),  # MPEG-4
+                    cvf(*"MP4S"),  # MPEG-4
+                    cvf(*"XVID"),  # XVID MPEG-4
+                    # http://www.fourcc.org/codecs.php
+
+                    # }}}
+                    1,
+                    -1]                                # Show dialog
+
+            self.fourcc = fourccs[-2]
 
         self.cap = cv2.VideoCapture(0)
 
-        print("Input record frame par sec")
+        print("Input record frame par sec( * [fpc[)")
+        print("")
+        print("Masuk record frame par sec( * [fpc[)")
+        print("")
 
+        print("<<<")
         self.fps = int(raw_input())
 
         if os.name != "nt":
@@ -93,7 +101,12 @@ class Record:
         """ 動画 録画 """
         print("Input record interval time [sec]")
         print("Input under 0, not split video")
+        print("")
+        print("Masuk waktu yg potong record")
+        print("Kalau masuk kurang 0, tdk potong")
+        print("")
 
+        print("<<<")
         interval = raw_input()
 
         start = time.time()
@@ -122,6 +135,7 @@ class Record:
 
 
 def main():
+    print("Open CV: {}".format(cv2.__version__))
     rec = Record()
     rec.run("REC")
 
