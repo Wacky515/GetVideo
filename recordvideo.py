@@ -20,6 +20,7 @@ import numpy
 import cv2
 
 import os
+import sys
 import time
 import datetime
 import platform
@@ -27,21 +28,25 @@ import platform
 
 class Record:
     """ 録画クラス """
-    def __init__(self):
+    def __init__(self, fps=None, interval=None):
+        self.fps = fps
+        self.interval = interval
+
         self.now = datetime.datetime.today()
         self.now = self.now.strftime("%Y%m%d_%H-%M-%S")
-        self.host = platform.uname()[1]
 
-        print("Now/Sekarang: {}".format(self.now))
+        self.host = platform.uname()[1]
         print("PC name/Nama PC: {}".format(self.host))
         print("")
 
+        # コーデック 選択  # {{{
         # OpenCV バージョン差の吸収
-        cv_ver = cv2.__version__
+        cv_ver = cv2.__version__  # {{{
         if cv_ver[0] == "2":
             cvf = cv2.cv.CV_FOURCC
         else:
             cvf = cv2.VideoWriter_fourcc
+            # }}}
 
         if os.name != "nt":
             self.cvf.fourcc = ("m", "p", "4", "v")
@@ -66,21 +71,16 @@ class Record:
                     # http://www.fourcc.org/codecs.php
 
                     # }}}
+                    0,
                     1,
-                    -1]                                # Show dialog
+                    -1]            # Show dialog
 
             self.fourcc = fourccs[-2]
+# }}}
 
         self.cap = cv2.VideoCapture(0)
 
-        print("Input record frame par sec( * [fpc[)")
-        print("")
-        print("Masuk record frame par sec( * [fpc[)")
-        print("")
-
-        print("<<<")
-        self.fps = int(raw_input())
-
+        # 画角 指定  # {{{
         if os.name != "nt":
             width = int(self.cap.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH))
             height = int(self.cap.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT))
@@ -92,22 +92,37 @@ class Record:
         self.size = (width, height)
         # Memo
         # キャプチャより保存画角が大きい場合、自動でスケーリング
+# }}}
 
+        # fpc 指定  # {{{
+        if self.fps is None:
+            print("Input record frame par sec( * [fpc])")
+            print("Masuk record frame par sec( * [fpc])")
+
+            print("<<<")
+            self.fps = int(raw_input())
+# }}}
+
+        # 録画インターバル時間 指定
+        if self.interval is None:
+            print("Input record interval time [sec]")
+            print("Input under 0, not split video")
+            print("")
+            print("Masuk waktu yg potong record")
+            print("Kalau masuk kurang 0, tdk potong")
+
+            print("<<<")
+            self.interval = raw_input()
+# }}}
+
+        # 保存名 指定  # {{{
         cvw = cv2.VideoWriter
         filename = "rec_{}_{}.avi".format(self.host, self.now)
         self.save = cvw(filename, self.fourcc, self.fps, self.size)
+# }}}
 
     def run(self, windowname):
         """ 動画 録画 """
-        print("Input record interval time [sec]")
-        print("Input under 0, not split video")
-        print("")
-        print("Masuk waktu yg potong record")
-        print("Kalau masuk kurang 0, tdk potong")
-        print("")
-
-        print("<<<")
-        interval = raw_input()
 
         start = time.time()
 
@@ -118,15 +133,18 @@ class Record:
                 cv2.imshow(windowname, frame)
                 self.save.write(frame)
 
-            if interval > 0:
-                interval = int(interval) * 1.00
+            if self.interval > 0:
+                self.interval = int(self.interval) * 1.00
                 past = round(time.time() - start, 2)
-                print("{0:.2f}/{1:.2f} [sec]".format(past, interval))
-                if past > interval:
+                print("{0:.2f}/{1:.2f} [sec]".format(past, self.interval))
+                if past > self.interval:
                     break
 
             if cv2.waitKey(1) == ord("q"):
                 break
+
+            if cv2.waitKey(1) == ord("e"):
+                sys.exit()
 
         # 全ストリーム 解放
         self.cap.release()

@@ -16,7 +16,8 @@ setup(
         # options={"py2exe": option},
         # console=[{"script": "tplmatching.py"}],
         options={"py2exe": {"dll_excludes": ["MSVCP90.dll"]}},
-        console=["recordvideo.py"],
+        # console=["recordvideo.py"],
+        console=["recordctrl.py"],
         # windows=["guitplmatching.py"],
         # zipfile="guitplmatching.zip"
         zipfile=None
