@@ -12,13 +12,6 @@
 # -------------------------------------------------------------------------------
 
 # モジュールインポート
-
-# !!!: "*.exe" 化する時にこの import 順は必須
-import numpy
-import cv2
-
-import sys
-import time
 import datetime
 import recordvideo as rv
 
