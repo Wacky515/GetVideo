@@ -12,6 +12,12 @@
 # -----------------------------------------------------------------------------
 
 # モジュールインポート
+
+# !!!: "*.exe" 化する時にこの import 順は必須
+import numpy
+import cv2
+
+import sys
 import datetime
 import recordvideo as rv
 
@@ -48,7 +54,11 @@ class LoopRecord:
 
         while(True):
             rec = rv.Record(fps, interval)
-            rec.run("REC loop")
+            rec.run("REC loop (\"e\"key: quit)")
+
+        if cv2.waitKey(1) == ord("e"):
+            print("Press \"e\" Key")
+            sys.exit()
 
 
 def main():

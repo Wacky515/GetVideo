@@ -11,7 +11,9 @@
 # Licence:     SDS10014
 # -----------------------------------------------------------------------------
 
-# TODO: *.exe化
+# TODO:
+# *.exe化
+# sec -> min
 
 # モジュールインポート
 
@@ -49,7 +51,7 @@ class Record:
             # }}}
 
         if os.name != "nt":
-            self.cvf.fourcc = ("m", "p", "4", "v")
+            self.fourcc = cvf("m", "p", "4", "v")
 
         elif os.name == "nt":
             fourccs = [
@@ -141,10 +143,9 @@ class Record:
                     break
 
             if cv2.waitKey(1) == ord("q"):
+                self.save.write(frame)
+                print("Press \"q\" Key")
                 break
-
-            if cv2.waitKey(1) == ord("e"):
-                sys.exit()
 
         # 全ストリーム 解放
         self.cap.release()
@@ -155,7 +156,7 @@ class Record:
 def main():
     print("Open CV: {}".format(cv2.__version__))
     rec = Record()
-    rec.run("REC")
+    rec.run("REC (\"q\"key: quit)")
 
 if __name__ == "__main__":
     main()
