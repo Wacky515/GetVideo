@@ -20,9 +20,9 @@
 # !!!: "*.exe" 化する時にこの import 順は必須
 import numpy
 import cv2
+import cv2.cv as cv
 
 import os
-import sys
 import time
 import datetime
 import platform
@@ -45,7 +45,7 @@ class Record:
         # OpenCV バージョン差の吸収
         cv_ver = cv2.__version__  # {{{
         if cv_ver[0] == "2":
-            cvf = cv2.cv.CV_FOURCC
+            cvf = cv.CV_FOURCC
         else:
             cvf = cv2.VideoWriter_fourcc
             # }}}
@@ -84,8 +84,8 @@ class Record:
 
         # 画角 指定  # {{{
         if os.name != "nt":
-            width = int(self.cap.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH))
-            height = int(self.cap.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT))
+            width = int(self.cap.get(cv.CV_CAP_PROP_FRAME_WIDTH))
+            height = int(self.cap.get(cv.CV_CAP_PROP_FRAME_HEIGHT))
 
         elif os.name == "nt":
             width = int(self.cap.get(3))
