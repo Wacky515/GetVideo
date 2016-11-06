@@ -16,6 +16,7 @@
 # !!!: "*.exe" 化する時にこの import 順は必須
 import numpy
 import cv2
+import cv2.cv as cv
 
 import sys
 import datetime
