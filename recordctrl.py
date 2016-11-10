@@ -10,6 +10,8 @@
 # Copyright:   (c) SkyDog 2016
 # Licence:     SDS10015
 # -----------------------------------------------------------------------------
+# TODO:
+# カメラの複数台ハンドリング
 
 # モジュールインポート
 
@@ -23,10 +25,18 @@ import datetime
 
 import recordvideo as rv
 
+# sysモジュール リロード
+reload(sys)
+
+# デフォルトの文字コード 出力
+sys.setdefaultencoding("utf-8")
+
 
 class LoopRecord:
     """ 録画ループ時間管理クラス """
-    def __init__(self):
+    def __init__(self, time_unit="min"):
+        self.time_unit = time_unit
+
         self.now = datetime.datetime.today()
         self.now = self.now.strftime("%Y%m%d_%H-%M-%S")
 
@@ -35,28 +45,29 @@ class LoopRecord:
 
     def run(self):
         """ 録画 ループ """
-        # fpc 指定  # {{{
-        print("Input record frame par sec( * [fpc])")
-        print("Masuk record frame par sec( * [fpc])")
+        # fps 指定  # {{{
+        print("Input record frame par sec( * [fps])")
+        print("Masukan record frame par sec( * [fps])")
 
         print("<<<")
         fps = int(raw_input())
 # }}}
 
         # 録画インターバル時間 指定  # {{{
-        print("Input record interval time [sec]")
+        print("Input record interval time [{}]".format(self.time_unit))
         print("Input under 0, not split video")
         print("")
-        print("Masuk waktu yg potong record")
-        print("Kalau masuk kurang 0, tdk potong")
+        print("Masukan waktu interval  /per [{}]".format(self.time_unit))
+
+        print("Jika masukan kurang dari 0, video tdk dipotong")
 
         print("<<<")
-        interval = raw_input()
+        interval = float(raw_input())
 # }}}
 
         while(True):
-            rec = rv.Record(fps, interval)
-            rec.run("REC loop (\"e\"key: quit)")
+            rec = rv.Record(fps=fps, interval=interval)
+            rec.run("REC loop (\"q\"key: quit)")
 
         if cv2.waitKey(1) == ord("e"):
             print("Press \"e\" Key")

@@ -12,8 +12,10 @@
 # -----------------------------------------------------------------------------
 
 # TODO:
-# *.exe化
+
+# DONE:
 # sec -> min
+# *.exe化
 
 # モジュールインポート
 
@@ -23,16 +25,32 @@ import cv2
 import cv2.cv as cv
 
 import os
+import sys
 import time
 import datetime
 import platform
 
+# sysモジュール リロード
+reload(sys)
+
+# デフォルトの文字コード 出力
+sys.setdefaultencoding("utf-8")
+
 
 class Record:
     """ 録画クラス """
-    def __init__(self, fps=None, interval=None):
+    def __init__(self, cam_no=0, fps=None, interval=None, time_unit="min"):
+        self.cam_no = cam_no
         self.fps = fps
         self.interval = interval
+
+        self.unit = time_unit
+        if time_unit == "min":
+            self.time_unit = 60
+        else:
+            self.time_unit = 1
+
+        print("Open CV: {}".format(cv2.__version__))
 
         self.now = datetime.datetime.today()
         self.now = self.now.strftime("%Y%m%d_%H-%M-%S")
@@ -80,7 +98,7 @@ class Record:
             self.fourcc = fourccs[-2]
 # }}}
 
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(int(cam_no))
 
         # 画角 指定  # {{{
         if os.name != "nt":
@@ -96,10 +114,10 @@ class Record:
         # キャプチャより保存画角が大きい場合、自動でスケーリング
 # }}}
 
-        # fpc 指定  # {{{
+        # fps 指定  # {{{
         if self.fps is None:
-            print("Input record frame par sec( * [fpc])")
-            print("Masuk record frame par sec( * [fpc])")
+            print("Input record frame par sec( * [fps])")
+            print("Masukan record frame par sec( * [fps])")
 
             print("<<<")
             self.fps = int(raw_input())
@@ -107,19 +125,26 @@ class Record:
 
         # 録画インターバル時間 指定
         if self.interval is None:
-            print("Input record interval time [sec]")
+            print("Input record interval time [{}]".format(self.unit))
             print("Input under 0, not split video")
             print("")
-            print("Masuk waktu yg potong record")
-            print("Kalau masuk kurang 0, tdk potong")
+            print("Masukan waktu interval  /per [{}]".format(self.unit))
+            print("Jika masukan kurang dari 0, video tdk dipotong")
 
             print("<<<")
-            self.interval = raw_input()
+            self.interval = float(raw_input()) * self.time_unit
+        else:
+            self.interval = self.interval * self.time_unit
+
+        print("Input: {}".format(self.interval))
 # }}}
 
         # 保存名 指定  # {{{
         cvw = cv2.VideoWriter
-        filename = "rec_{}_{}.avi".format(self.host, self.now)
+        if os.name != "nt":
+            filename = "rec_{}_{}.avi".format(self.host, self.now)
+        elif os.name == "nt":
+            filename = "..\\rec_{}_{}.avi".format(self.host, self.now)
         self.save = cvw(filename, self.fourcc, self.fps, self.size)
 # }}}
 
@@ -136,7 +161,6 @@ class Record:
                 self.save.write(frame)
 
             if self.interval > 0:
-                self.interval = int(self.interval) * 1.00
                 past = round(time.time() - start, 2)
                 print("{0:.2f}/{1:.2f} [sec]".format(past, self.interval))
                 if past > self.interval:
@@ -145,7 +169,7 @@ class Record:
             if cv2.waitKey(1) == ord("q"):
                 self.save.write(frame)
                 print("Press \"q\" Key")
-                break
+                sys.exit()
 
         # 全ストリーム 解放
         self.cap.release()
@@ -154,9 +178,12 @@ class Record:
 
 
 def main():
-    print("Open CV: {}".format(cv2.__version__))
-    rec = Record()
-    rec.run("REC (\"q\"key: quit)")
+    rec1 = Record(cam_no=0)
+    # rec1 = Record(cam_no=0, fps=1, interval=0.05)
+    rec1.run("REC (\"q\"key: quit)")
+
+    # rec2 = Record(cam_no=6)
+    # rec2.run("REC (\"q\"key: quit)")
 
 if __name__ == "__main__":
     main()
