@@ -10,10 +10,16 @@
 # Copyright:   (c) SkyDog 2016
 # Licence:     SDS10014
 # -----------------------------------------------------------------------------
-
 # TODO:
 
+# FIXME:
+# "print" 文関数化
+
 # DONE:
+# "frame_size_error" が出る
+# -> 未接続カメラの "imshow" と "write" のエラー
+# 接続していないカメラも保存される
+# cam2以降が1フレームしか保存されない
 # sec -> min
 # *.exe化
 
@@ -39,8 +45,7 @@ sys.setdefaultencoding("utf-8")
 
 class Record:
     """ 録画クラス """
-    def __init__(self, cam_no=0, fps=None, interval=None, time_unit="min"):
-        self.cam_no = cam_no
+    def __init__(self, fps=None, interval=None, time_unit="min"):
         self.fps = fps
         self.interval = interval
 
@@ -98,7 +103,14 @@ class Record:
             self.fourcc = fourccs[-2]
 # }}}
 
-        self.cap = cv2.VideoCapture(int(cam_no))
+        self.cap = cv2.VideoCapture(0)
+        # try:
+        self.cap2 = cv2.VideoCapture(1)
+        self.cap3 = cv2.VideoCapture(2)
+        self.cap4 = cv2.VideoCapture(3)
+
+        # except:
+        #     pass
 
         # 画角 指定  # {{{
         if os.name != "nt":
@@ -118,47 +130,112 @@ class Record:
         if self.fps is None:
             print("Input record frame par sec( * [fps])")
             print("Masukan record frame par sec( * [fps])")
-
             print("<<<")
+
             self.fps = int(raw_input())
 # }}}
 
-        # 録画インターバル時間 指定
+        # 録画インターバル時間 指定  # {{{
+
         if self.interval is None:
             print("Input record interval time [{}]".format(self.unit))
             print("Input under 0, not split video")
             print("")
             print("Masukan waktu interval  /per [{}]".format(self.unit))
             print("Jika masukan kurang dari 0, video tdk dipotong")
-
             print("<<<")
             self.interval = float(raw_input()) * self.time_unit
+
         else:
             self.interval = self.interval * self.time_unit
 
         print("Input: {}".format(self.interval))
+        print("test1")
 # }}}
 
         # 保存名 指定  # {{{
-        cvw = cv2.VideoWriter
+        self.cvw = cv2.VideoWriter
+        sht = self.host
+        sow = self.now
         if os.name != "nt":
-            filename = "rec_{}_{}.avi".format(self.host, self.now)
+            filename = "cam01_{}_{}_{}.avi".format(sht, sow)
+            try:
+            # if self.cap2.isOpened():
+                filename2 = "cam02_{}_{}_{}.avi".format(sht, sow)
+            # if self.cap3.isOpened():
+                filename3 = "cam03_{}_{}_{}.avi".format(sht, sow)
+            # if self.cap4.isOpened():
+                filename4 = "cam04_{}_{}_{}.avi".format(sht, sow)
+
+            except Exception as vwerror:
+                print("=== Video write error ===")
+                print("Type: " + str(type(vwerror)))
+                print("Args: " + str(vwerror.args))
+                print("Message: " + vwerror.message)
+                print("Error: " + str(vwerror))
+                print("")
+
         elif os.name == "nt":
-            filename = "..\\rec_{}_{}.avi".format(self.host, self.now)
-        self.save = cvw(filename, self.fourcc, self.fps, self.size)
+            filename = "..\\cam01_{}_{}.avi".format(sht, sow)
+            try:
+                filename2 = "..\\cam02_{}_{}.avi".format(sht, sow)
+                filename3 = "..\\cam03_{}_{}.avi".format(sht, sow)
+                filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
+
+            except Exception as vwerror:
+                print("=== Video write error ===")
+                print("Type: " + str(type(vwerror)))
+                print("Args: " + str(vwerror.args))
+                print("Message: " + vwerror.message)
+                print("Error: " + str(vwerror))
+                print("")
+
+        self.save = self.cvw(filename, self.fourcc, self.fps, self.size)
+        if self.cap2.isOpened():
+            self.save2 = self.cvw(filename2, self.fourcc, self.fps, self.size)
+        if self.cap3.isOpened():
+            self.save3 = self.cvw(filename3, self.fourcc, self.fps, self.size)
+        if self.cap4.isOpened():
+            self.save4 = self.cvw(filename4, self.fourcc, self.fps, self.size)
 # }}}
 
     def run(self, windowname):
         """ 動画 録画 """
-
         start = time.time()
 
         while(self.cap.isOpened()):
             ret, frame = self.cap.read()
+            try:
+                ret2, frame2 = self.cap2.read()
+                ret3, frame3 = self.cap3.read()
+                ret4, frame4 = self.cap4.read()
+
+            except Exception as gverror:
+                print("=== Get video error ===")
+                print("Type: " + str(type(gverror)))
+                print("Args: " + str(gverror.args))
+                print("Message: " + gverror.message)
+                print("Error: " + str(gverror))
+                print("")
 
             if ret is True:
                 cv2.imshow(windowname, frame)
                 self.save.write(frame)
+
+                try:
+                    cv2.imshow(windowname + " 2", frame2)
+                    self.save2.write(frame2)
+
+                    cv2.imshow(windowname + " 3", frame3)
+                    self.save3.write(frame3)
+
+                except Exception as sverror:
+                    print("=== Show video error ===")
+                    print("Type: " + str(type(sverror)))
+                    print("Args: " + str(sverror.args))
+                    print("Message: " + sverror.message)
+                    print("Error: " + str(sverror))
+                    print("")
 
             if self.interval > 0:
                 past = round(time.time() - start, 2)
@@ -178,12 +255,13 @@ class Record:
 
 
 def main():
-    rec1 = Record(cam_no=0)
-    # rec1 = Record(cam_no=0, fps=1, interval=0.05)
-    rec1.run("REC (\"q\"key: quit)")
+    # rec1 = Record()
+    rec1 = Record(fps=1, interval=1)
+    # rec1 = Record(fps=1, interval=0.05)
+    # rec2 = Record(fps=1, interval=0.05)
 
-    # rec2 = Record(cam_no=6)
-    # rec2.run("REC (\"q\"key: quit)")
+    rec1.run("REC (\"q\"key: quit)")
+    # rec2.run("REC2 (\"q\"key: quit)")
 
 if __name__ == "__main__":
     main()

@@ -13,6 +13,9 @@
 # TODO:
 # カメラの複数台ハンドリング
 
+# FIXME:
+# ループ後にcam02以降が保存されない
+
 # モジュールインポート
 
 # !!!: "*.exe" 化する時にこの import 順は必須
@@ -48,8 +51,8 @@ class LoopRecord:
         # fps 指定  # {{{
         print("Input record frame par sec( * [fps])")
         print("Masukan record frame par sec( * [fps])")
-
         print("<<<")
+
         fps = int(raw_input())
 # }}}
 
@@ -58,10 +61,9 @@ class LoopRecord:
         print("Input under 0, not split video")
         print("")
         print("Masukan waktu interval  /per [{}]".format(self.time_unit))
-
         print("Jika masukan kurang dari 0, video tdk dipotong")
-
         print("<<<")
+
         interval = float(raw_input())
 # }}}
 
