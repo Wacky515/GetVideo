@@ -1,24 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from distutils.core import setup
-import py2exe
-import sys
+import py2exe, sys
 
 sys.argv.append("py2exe")
 
-option = {
-        "compressed": 1,
-        "optimize": 2,
-        "bundle_files": 1
-        }
-
 setup(
-        # options={"py2exe": option},
-        # console=[{"script": "tplmatching.py"}],
-        options={"py2exe": {"dll_excludes": ["MSVCP90.dll"]}},
-        # console=["recordvideo.py"],
-        console=["recordctrl.py"],
-        # windows=["guitplmatching.py"],
-        # zipfile="guitplmatching.zip"
-        zipfile=None
-        )
+        options={"py2exe": {"bundle_files": 3}},
+        zipfile=None,
+        console=[{"script": "recordvideo.py"}]
+)

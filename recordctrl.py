@@ -11,10 +11,13 @@
 # Licence:     SDS10015
 # -----------------------------------------------------------------------------
 # TODO:
-# カメラの複数台ハンドリング
 
 # FIXME:
+# カメラ接続が無い時に終了する（今は無限ループする）
+
+# DONE:
 # ループ後にcam02以降が保存されない
+# カメラの複数台ハンドリング
 
 # モジュールインポート
 
@@ -38,33 +41,41 @@ sys.setdefaultencoding("utf-8")
 class LoopRecord:
     """ 録画ループ時間管理クラス """
     def __init__(self, time_unit="min"):
-        self.time_unit = time_unit
+        init_cap = cv2.VideoCapture(0)
+        if init_cap.isOpened():
+            self.time_unit = time_unit
 
-        self.now = datetime.datetime.today()
-        self.now = self.now.strftime("%Y%m%d_%H-%M-%S")
+            self.now = datetime.datetime.today()
+            self.now = self.now.strftime("%Y%m%d_%H-%M-%S")
 
-        print("Now/Sekarang: {}".format(self.now))
-        print("")
+            print("Now/Sekarang: {}".format(self.now))
+            print("")
+
+        else:
+            print("Quit loop, No camera")
+            sys.exit()
 
     def run(self):
         """ 録画 ループ """
         # fps 指定  # {{{
-        print("Input record frame par sec( * [fps])")
-        print("Masukan record frame par sec( * [fps])")
+        print("Input loop record frame par sec( * [fps])")
+        print("Masukan loop record frame par sec( * [fps])")
         print("<<<")
 
         fps = int(raw_input())
+        print("")
 # }}}
 
         # 録画インターバル時間 指定  # {{{
-        print("Input record interval time [{}]".format(self.time_unit))
+        print("Input loop record interval time [{}]".format(self.time_unit))
         print("Input under 0, not split video")
         print("")
-        print("Masukan waktu interval  /per [{}]".format(self.time_unit))
+        print("Masukan waktu loop interval /per [{}]".format(self.time_unit))
         print("Jika masukan kurang dari 0, video tdk dipotong")
         print("<<<")
 
         interval = float(raw_input())
+        print("")
 # }}}
 
         while(True):
@@ -77,6 +88,9 @@ class LoopRecord:
 
 
 def main():
+    print("Loop start")
+    print("")
+
     lrc = LoopRecord()
     lrc.run()
 
