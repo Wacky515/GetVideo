@@ -21,4 +21,5 @@ build/
 *.dump
 *.txt
 *.exe
+*.zip
 tags

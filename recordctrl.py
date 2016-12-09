@@ -13,9 +13,9 @@
 # TODO:
 
 # FIXME:
-# カメラ接続が無い時に終了する（今は無限ループする）
 
 # DONE:
+# カメラ接続が無い時に終了する（今は無限ループする）
 # ループ後にcam02以降が保存されない
 # カメラの複数台ハンドリング
 
@@ -46,7 +46,7 @@ class LoopRecord:
             self.time_unit = time_unit
 
             self.now = datetime.datetime.today()
-            self.now = self.now.strftime("%Y%m%d_%H-%M-%S")
+            self.now = self.now.strftime("%Y-%m-%d_%H-%M-%S")
 
             print("Now/Sekarang: {}".format(self.now))
             print("")
@@ -88,7 +88,7 @@ class LoopRecord:
 
 
 def main():
-    print("Loop start")
+    print("Loop record start")
     print("")
 
     lrc = LoopRecord()
