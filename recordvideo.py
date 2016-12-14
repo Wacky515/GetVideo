@@ -168,7 +168,7 @@ class Record:
             print("")
 
             try:
-                if os.name != "nt":
+                if os.name != "nt" or os.name == "posix":
                     filename = "cam01_{}_{}_{}.avi".format(sht, sow)
                     filename2 = "cam02_{}_{}_{}.avi".format(sht, sow)
                     filename3 = "cam03_{}_{}_{}.avi".format(sht, sow)
