@@ -169,10 +169,10 @@ class Record:
 
             try:
                 if os.name != "nt" or os.name == "posix":
-                    filename = "cam01_{}_{}_{}.avi".format(sht, sow)
-                    filename2 = "cam02_{}_{}_{}.avi".format(sht, sow)
-                    filename3 = "cam03_{}_{}_{}.avi".format(sht, sow)
-                    filename4 = "cam04_{}_{}_{}.avi".format(sht, sow)
+                    filename = "cam01_{}_{}.avi".format(sht, sow)
+                    filename2 = "cam02_{}_{}.avi".format(sht, sow)
+                    filename3 = "cam03_{}_{}.avi".format(sht, sow)
+                    filename4 = "cam04_{}_{}.avi".format(sht, sow)
                     print("In Linux or Mac")
 
                 elif os.name == "nt":
@@ -198,10 +198,10 @@ class Record:
                         print("Execute *.exe")
 
             except Exception as vwerror:
-                filename = "cam01_{}_{}_{}.avi".format(sht, sow)
-                filename2 = "cam02_{}_{}_{}.avi".format(sht, sow)
-                filename3 = "cam03_{}_{}_{}.avi".format(sht, sow)
-                filename4 = "cam04_{}_{}_{}.avi".format(sht, sow)
+                filename = "cam01_{}_{}.avi".format(sht, sow)
+                filename2 = "cam02_{}_{}.avi".format(sht, sow)
+                filename3 = "cam03_{}_{}.avi".format(sht, sow)
+                filename4 = "cam04_{}_{}.avi".format(sht, sow)
 
                 print("=== Video write error ===")
                 print("Type: " + str(type(vwerror)))
