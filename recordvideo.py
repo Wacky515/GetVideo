@@ -162,8 +162,10 @@ class Record:
             # "*.exe" 時の "*.avi" 保存先変更
             ext = __file__
             curt = os.path.abspath(__file__)
+            print("OS: {}".format(os.name))
             print("File extension: {}".format(ext))
             print("Current dir: {}".format(curt))
+            print("")
 
             try:
                 if os.name != "nt":
