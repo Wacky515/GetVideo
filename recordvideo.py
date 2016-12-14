@@ -197,23 +197,21 @@ class Record:
                         filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
                         print("Execute *.exe")
 
-                print("")
-
             except Exception as vwerror:
-                filename = "..\\cam01_{}_{}.avi".format(sht, sow)
-                filename2 = "..\\cam02_{}_{}.avi".format(sht, sow)
-                filename3 = "..\\cam03_{}_{}.avi".format(sht, sow)
-                filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
+                filename = "cam01_{}_{}_{}.avi".format(sht, sow)
+                filename2 = "cam02_{}_{}_{}.avi".format(sht, sow)
+                filename3 = "cam03_{}_{}_{}.avi".format(sht, sow)
+                filename4 = "cam04_{}_{}_{}.avi".format(sht, sow)
 
                 print("=== Video write error ===")
                 print("Type: " + str(type(vwerror)))
                 print("Args: " + str(vwerror.args))
                 print("Message: " + vwerror.message)
                 print("Error: " + str(vwerror))
-                print("")
+
+            print("")
 
             sfur = self.fourcc
-
             self.save = self.cvw(filename, sfur, self.fps, self.size)
 
             if self.cap2.isOpened():
