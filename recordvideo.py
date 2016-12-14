@@ -160,19 +160,20 @@ class Record:
             sow = self.now
 
             # "*.exe" 時の "*.avi" 保存先変更
+            ext = __file__
+            curt = os.path.abspath(__file__)
+            print("File extension: {}".format(ext))
+            print("Current dir: {}".format(curt))
+
             try:
                 if os.name != "nt":
                     filename = "cam01_{}_{}_{}.avi".format(sht, sow)
                     filename2 = "cam02_{}_{}_{}.avi".format(sht, sow)
                     filename3 = "cam03_{}_{}_{}.avi".format(sht, sow)
                     filename4 = "cam04_{}_{}_{}.avi".format(sht, sow)
+                    print("In Linux or Mac")
 
                 elif os.name == "nt":
-                    ext = __file__
-                    curt = os.path.abspath(__file__)
-                    print("File extension: {}".format(ext))
-                    print("Current dir: {}".format(curt))
-
                     if "dist" in curt:
                         filename = "..\\cam01_{}_{}.avi".format(sht, sow)
                         filename2 = "..\\cam02_{}_{}.avi".format(sht, sow)
@@ -194,7 +195,7 @@ class Record:
                         filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
                         print("Execute *.exe")
 
-                    print("")
+                print("")
 
             except Exception as vwerror:
                 filename = "..\\cam01_{}_{}.avi".format(sht, sow)
