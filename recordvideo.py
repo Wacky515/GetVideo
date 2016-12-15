@@ -255,7 +255,10 @@ class Record:
                 print("")
 
             if ret is True:
-                cv2.imshow(windowname, frame)
+                try:
+                    cv2.imshow(windowname, frame)
+                except Exception as gverror:
+                    print("No monitor")
                 self.save.write(frame)
 
                 try:
