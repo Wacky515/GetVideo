@@ -73,50 +73,6 @@ class Record:
 
         if self.cap.isOpened():
             self.camera = True
-<<<<<<< HEAD
-
-            # コーデック 選択  # {{{
-            # OpenCV バージョン差の吸収
-            cv_ver = cv2.__version__  # {{{
-            if cv_ver[0] == "2":
-                cvf = cv.CV_FOURCC
-            else:
-                cvf = cv2.VideoWriter_fourcc
-                # }}}
-
-            if os.name != "nt":
-                self.fourcc = cvf("m", "p", "4", "v")
-
-            elif os.name == "nt":
-                fourccs = [
-                        # {{{
-                        cvf(*"DIB "),  # No compress
-                        cvf(*"PIM1"),  # MPEG-1
-                        cvf(*"MJPG"),  # Motion-JPEG
-                                    # (Not so good)
-                        cvf(*"MP42"),  # MPEG-4.2
-                        cvf(*"DIV3"),  # MPEG-4.3
-                        cvf(*"DIVX"),  # MPEG-4
-                        cvf(*"U263"),  # H263
-                        cvf(*"I263"),  # H263I
-                        cvf(*"FLV1"),  # FLV1
-
-                        cvf(*"MP4V"),  # MPEG-4
-                        cvf(*"MP4S"),  # MPEG-4
-                        cvf(*"XVID"),  # XVID MPEG-4
-                        # http://www.fourcc.org/codecs.php
-
-                        # }}}
-                        0,
-                        1,
-                        -1]            # Show dialog
-
-                self.fourcc = fourccs[-2]
-# }}}
-=======
->>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
-=======
->>>>>>> fc47e5d859cf38528eff43629c7bd8321832331b
 
             # fps 指定  # {{{
             if self.fps is None:
