@@ -73,6 +73,7 @@ class Record:
 
         if self.cap.isOpened():
             self.camera = True
+<<<<<<< HEAD
 
             # コーデック 選択  # {{{
             # OpenCV バージョン差の吸収
@@ -114,47 +115,14 @@ class Record:
 # }}}
 =======
 >>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
+=======
+>>>>>>> fc47e5d859cf38528eff43629c7bd8321832331b
 
             # fps 指定  # {{{
             if self.fps is None:
                 print("Input record frame par sec( * [fps])")
                 print("Masukan record frame par sec( * [fps])")
                 print("<<<")
-<<<<<<< HEAD
-                print("")
-
-                self.fps = int(raw_input())
-# }}}
-
-            # 画角 指定  # {{{
-            if os.name != "nt":
-                width = int(self.cap.get(cv.CV_CAP_PROP_FRAME_WIDTH))
-                height = int(self.cap.get(cv.CV_CAP_PROP_FRAME_HEIGHT))
-
-            elif os.name == "nt":
-                width = int(self.cap.get(3))
-                height = int(self.cap.get(4))
-
-            self.size = (width, height)
-            # Memo
-            # キャプチャより保存画角が大きい場合、自動でスケーリング
-# }}}
-
-            # 録画インターバル時間 指定  # {{{
-            if self.interval is None:
-                print("Input record interval time [{}]".format(self.unit))
-                print("Input under 0, not split video")
-                print("")
-                print("Masukan waktu interval  /per [{}]".format(self.unit))
-                print("Jika masukan kurang dari 0, video tdk dipotong")
-                print("<<<")
-                print("")
-
-                self.interval = float(raw_input()) * self.time_unit
-
-            else:
-                self.interval = self.interval * self.time_unit
-=======
 
                 self.fps = int(raw_input())
                 print("")
@@ -227,7 +195,6 @@ class Record:
             self.size = (width, height)
             # Memo
             # キャプチャより保存画角が大きい場合、自動でスケーリング
->>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 # }}}
 
             # 保存名 指定  # {{{
@@ -235,20 +202,6 @@ class Record:
             sht = self.host
             sow = self.now
 
-<<<<<<< HEAD
-            try:
-                if os.name != "nt":
-                    filename = "cam01_{}_{}_{}.avi".format(sht, sow)
-                    filename2 = "cam02_{}_{}_{}.avi".format(sht, sow)
-                    filename3 = "cam03_{}_{}_{}.avi".format(sht, sow)
-                    filename4 = "cam04_{}_{}_{}.avi".format(sht, sow)
-
-                elif os.name == "nt":
-                    filename = "..\\cam01_{}_{}.avi".format(sht, sow)
-                    filename2 = "..\\cam02_{}_{}.avi".format(sht, sow)
-                    filename3 = "..\\cam03_{}_{}.avi".format(sht, sow)
-                    filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
-=======
             # "*.exe" 時の "*.avi" 保存先変更
             ext = __file__
             curt = os.path.abspath(__file__)
@@ -286,7 +239,6 @@ class Record:
                         filename3 = "..\\cam03_{}_{}.avi".format(sht, sow)
                         filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
                         print("Execute *.exe")
->>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
             except Exception as vwerror:
                 filename = "cam01_{}_{}.avi".format(sht, sow)
@@ -300,27 +252,6 @@ class Record:
                 print("Message: " + vwerror.message)
                 print("Error: " + str(vwerror))
 
-<<<<<<< HEAD
-            self.save = self.cvw(filename, self.fourcc, self.fps, self.size)
-
-            print("Open CV: {}".format(cv2.__version__))
-            print("PC name/Nama PC: {}".format(self.host))
-            print("")
-
-            sfur = self.fourcc
-
-            if self.cap2.isOpened():
-                self.save2 = self.cvw(filename2, sfur, self.fps, self.size)
-                self.camera2 = True
-
-            if self.cap3.isOpened():
-                self.save3 = self.cvw(filename3, sfur, self.fps, self.size)
-                self.camera3 = True
-
-            if self.cap4.isOpened():
-                self.save4 = self.cvw(filename4, sfur, self.fps, self.size)
-                self.camera4 = True
-=======
             print("")
 
             sfur = self.fourcc
@@ -341,7 +272,6 @@ class Record:
             print("Open CV: {}".format(cv2.__version__))
             print("PC name/Nama PC: {}".format(self.host))
             print("")
->>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 # }}}
 
         else:
@@ -368,23 +298,6 @@ class Record:
                 print("")
 
             if ret is True:
-<<<<<<< HEAD
-                try:
-                    cv2.imshow(windowname, frame)
-                    self.save.write(frame)
-
-                        if self.camera2 is True:
-                            cv2.imshow(windowname + " 2", frame2)
-                            self.save2.write(frame2)
-
-                        if self.camera3 is True:
-                            cv2.imshow(windowname + " 3", frame3)
-                            self.save3.write(frame3)
-
-                        if self.camera4 is True:
-                            cv2.imshow(windowname + " 4", frame3)
-                            self.save4.write(frame4)
-=======
                 try:
                     cv2.imshow(windowname, frame)
                 except Exception as gverror:
@@ -403,7 +316,6 @@ class Record:
                     if self.camera4 is True:
                         cv2.imshow(windowname + " 4", frame3)
                         self.save4.write(frame4)
->>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
                 except Exception as sverror:
                     print("=== Show video error ===")
@@ -442,25 +354,15 @@ class Record:
             self.cap4.release()
             self.save4.release()
             self.camera4 = False
-<<<<<<< HEAD
-=======
         print("")
->>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
         cv2.destroyAllWindows()
 
 
 def main():
-<<<<<<< HEAD
-    # rec1 = Record()
-    # rec1 = Record(fps=1, interval=1)
-    rec1 = Record(fps=1, interval=0.05)
-    # rec2 = Record(fps=1, interval=0.05)
-=======
     rec1 = Record()
     # rec1 = Record(fps=1, interval=1)
     # rec1 = Record(fps=1, interval=0.05)
->>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
     rec1.run("REC (\"q\"key: quit)")
     # rec2.run("REC2 (\"q\"key: quit)")
