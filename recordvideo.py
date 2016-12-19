@@ -12,9 +12,14 @@
 # -----------------------------------------------------------------------------
 # TODO:
 
+
 # FIXME:
 
 # DONE:
+<<<<<<< HEAD
+=======
+# 保存先を "dist" がカレントディレクトリの時とそれ以外で変える
+>>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 # "print"文 関数化
 # "frame_size_error" が出る
 # -> 未接続カメラの "imshow" と "write" のエラー
@@ -61,7 +66,7 @@ class Record:
             self.time_unit = 1
 
         self.now = datetime.datetime.today()
-        self.now = self.now.strftime("%Y%m%d_%H-%M-%S")
+        self.now = self.now.strftime("%Y-%m-%d_%H-%M-%S")
 
         self.host = platform.uname()[1]
 
@@ -72,6 +77,7 @@ class Record:
 
         if self.cap.isOpened():
             self.camera = True
+<<<<<<< HEAD
 
             # コーデック 選択  # {{{
             # OpenCV バージョン差の吸収
@@ -111,12 +117,15 @@ class Record:
 
                 self.fourcc = fourccs[-2]
 # }}}
+=======
+>>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
             # fps 指定  # {{{
             if self.fps is None:
                 print("Input record frame par sec( * [fps])")
                 print("Masukan record frame par sec( * [fps])")
                 print("<<<")
+<<<<<<< HEAD
                 print("")
 
                 self.fps = int(raw_input())
@@ -150,6 +159,80 @@ class Record:
 
             else:
                 self.interval = self.interval * self.time_unit
+=======
+
+                self.fps = int(raw_input())
+                print("")
+# }}}
+
+            # 録画インターバル時間 指定  # {{{
+            if self.interval is None:
+                print("Input record interval time [{}]".format(self.unit))
+                print("Input under 0, not split video")
+                print("")
+                print("Masukan waktu interval  /per [{}]".format(self.unit))
+                print("Jika masukan kurang dari 0, video tdk dipotong")
+                print("<<<")
+
+                self.interval = float(raw_input()) * self.time_unit
+                print("")
+
+            else:
+                self.interval = self.interval * self.time_unit
+# }}}
+
+            # コーデック 選択  # {{{
+            # OpenCV バージョン差の吸収
+            cv_ver = cv2.__version__  # {{{
+            if cv_ver[0] == "2":
+                cvf = cv.CV_FOURCC
+            else:
+                cvf = cv2.VideoWriter_fourcc
+                # }}}
+
+            if os.name != "nt":
+                self.fourcc = cvf("m", "p", "4", "v")
+
+            elif os.name == "nt":
+                fourccs = [
+                        # {{{
+                        cvf(*"DIB "),  # No compress
+                        cvf(*"PIM1"),  # MPEG-1
+                        cvf(*"MJPG"),  # Motion-JPEG
+                                       # (Not so good)
+                        cvf(*"MP42"),  # MPEG-4.2
+                        cvf(*"DIV3"),  # MPEG-4.3
+                        cvf(*"DIVX"),  # MPEG-4
+                        cvf(*"U263"),  # H263
+                        cvf(*"I263"),  # H263I
+                        cvf(*"FLV1"),  # FLV1
+
+                        cvf(*"MP4V"),  # MPEG-4
+                        cvf(*"MP4S"),  # MPEG-4
+                        cvf(*"XVID"),  # XVID MPEG-4
+                        # http://www.fourcc.org/codecs.php
+
+                        # }}}
+                        0,
+                        1,
+                        -1]            # Show dialog
+
+                self.fourcc = fourccs[-2]
+# }}}
+
+            # 画角 指定  # {{{
+            if os.name != "nt":
+                width = int(self.cap.get(cv.CV_CAP_PROP_FRAME_WIDTH))
+                height = int(self.cap.get(cv.CV_CAP_PROP_FRAME_HEIGHT))
+
+            elif os.name == "nt":
+                width = int(self.cap.get(3))
+                height = int(self.cap.get(4))
+
+            self.size = (width, height)
+            # Memo
+            # キャプチャより保存画角が大きい場合、自動でスケーリング
+>>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 # }}}
 
             # 保存名 指定  # {{{
@@ -157,6 +240,7 @@ class Record:
             sht = self.host
             sow = self.now
 
+<<<<<<< HEAD
             try:
                 if os.name != "nt":
                     filename = "cam01_{}_{}_{}.avi".format(sht, sow)
@@ -169,15 +253,59 @@ class Record:
                     filename2 = "..\\cam02_{}_{}.avi".format(sht, sow)
                     filename3 = "..\\cam03_{}_{}.avi".format(sht, sow)
                     filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
+=======
+            # "*.exe" 時の "*.avi" 保存先変更
+            ext = __file__
+            curt = os.path.abspath(__file__)
+            print("OS: {}".format(os.name))
+            print("File extension: {}".format(ext))
+            print("Current dir: {}".format(curt))
+            print("")
+
+            try:
+                if os.name != "nt" or os.name == "posix":
+                    filename = "cam01_{}_{}.avi".format(sht, sow)
+                    filename2 = "cam02_{}_{}.avi".format(sht, sow)
+                    filename3 = "cam03_{}_{}.avi".format(sht, sow)
+                    filename4 = "cam04_{}_{}.avi".format(sht, sow)
+                    print("In Linux or Mac")
+
+                elif os.name == "nt":
+                    if "dist" in curt:
+                        filename = "..\\cam01_{}_{}.avi".format(sht, sow)
+                        filename2 = "..\\cam02_{}_{}.avi".format(sht, sow)
+                        filename3 = "..\\cam03_{}_{}.avi".format(sht, sow)
+                        filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
+                        print("In dist")
+
+                    elif "py" in ext:
+                        filename = "cam01_{}_{}.avi".format(sht, sow)
+                        filename2 = "cam02_{}_{}.avi".format(sht, sow)
+                        filename3 = "cam03_{}_{}.avi".format(sht, sow)
+                        filename4 = "cam04_{}_{}.avi".format(sht, sow)
+                        print("Execute *.py")
+
+                    else:
+                        filename = "..\\cam01_{}_{}.avi".format(sht, sow)
+                        filename2 = "..\\cam02_{}_{}.avi".format(sht, sow)
+                        filename3 = "..\\cam03_{}_{}.avi".format(sht, sow)
+                        filename4 = "..\\cam04_{}_{}.avi".format(sht, sow)
+                        print("Execute *.exe")
+>>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
             except Exception as vwerror:
+                filename = "cam01_{}_{}.avi".format(sht, sow)
+                filename2 = "cam02_{}_{}.avi".format(sht, sow)
+                filename3 = "cam03_{}_{}.avi".format(sht, sow)
+                filename4 = "cam04_{}_{}.avi".format(sht, sow)
+
                 print("=== Video write error ===")
                 print("Type: " + str(type(vwerror)))
                 print("Args: " + str(vwerror.args))
                 print("Message: " + vwerror.message)
                 print("Error: " + str(vwerror))
-                print("")
 
+<<<<<<< HEAD
             self.save = self.cvw(filename, self.fourcc, self.fps, self.size)
 
             print("Open CV: {}".format(cv2.__version__))
@@ -197,6 +325,28 @@ class Record:
             if self.cap4.isOpened():
                 self.save4 = self.cvw(filename4, sfur, self.fps, self.size)
                 self.camera4 = True
+=======
+            print("")
+
+            sfur = self.fourcc
+            self.save = self.cvw(filename, sfur, self.fps, self.size)
+
+            if self.cap2.isOpened():
+                self.save2 = self.cvw(filename2, sfur, self.fps, self.size)
+                self.camera2 = True
+
+            if self.cap3.isOpened():
+                self.save3 = self.cvw(filename3, sfur, self.fps, self.size)
+                self.camera3 = True
+
+            if self.cap4.isOpened():
+                self.save4 = self.cvw(filename4, sfur, self.fps, self.size)
+                self.camera4 = True
+
+            print("Open CV: {}".format(cv2.__version__))
+            print("PC name/Nama PC: {}".format(self.host))
+            print("")
+>>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 # }}}
 
         else:
@@ -223,6 +373,7 @@ class Record:
                 print("")
 
             if ret is True:
+<<<<<<< HEAD
                 try:
                     cv2.imshow(windowname, frame)
                     self.save.write(frame)
@@ -238,6 +389,26 @@ class Record:
                         if self.camera4 is True:
                             cv2.imshow(windowname + " 4", frame3)
                             self.save4.write(frame4)
+=======
+                try:
+                    cv2.imshow(windowname, frame)
+                except Exception as gverror:
+                    print("No monitor")
+                self.save.write(frame)
+
+                try:
+                    if self.camera2 is True:
+                        cv2.imshow(windowname + " 2", frame2)
+                        self.save2.write(frame2)
+
+                    if self.camera3 is True:
+                        cv2.imshow(windowname + " 3", frame3)
+                        self.save3.write(frame3)
+
+                    if self.camera4 is True:
+                        cv2.imshow(windowname + " 4", frame3)
+                        self.save4.write(frame4)
+>>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
                 except Exception as sverror:
                     print("=== Show video error ===")
@@ -276,15 +447,25 @@ class Record:
             self.cap4.release()
             self.save4.release()
             self.camera4 = False
+<<<<<<< HEAD
+=======
+        print("")
+>>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
         cv2.destroyAllWindows()
 
 
 def main():
+<<<<<<< HEAD
     # rec1 = Record()
     # rec1 = Record(fps=1, interval=1)
     rec1 = Record(fps=1, interval=0.05)
     # rec2 = Record(fps=1, interval=0.05)
+=======
+    rec1 = Record()
+    # rec1 = Record(fps=1, interval=1)
+    # rec1 = Record(fps=1, interval=0.05)
+>>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 
     rec1.run("REC (\"q\"key: quit)")
     # rec2.run("REC2 (\"q\"key: quit)")
