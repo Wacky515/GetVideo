@@ -12,14 +12,10 @@
 # -----------------------------------------------------------------------------
 # TODO:
 
-
 # FIXME:
 
 # DONE:
-<<<<<<< HEAD
-=======
 # 保存先を "dist" がカレントディレクトリの時とそれ以外で変える
->>>>>>> 70cb26cd34f68fd51deb10aeacf57f2b9ae11875
 # "print"文 関数化
 # "frame_size_error" が出る
 # -> 未接続カメラの "imshow" と "write" のエラー
@@ -77,7 +73,6 @@ class Record:
 
         if self.cap.isOpened():
             self.camera = True
-<<<<<<< HEAD
 
             # コーデック 選択  # {{{
             # OpenCV バージョン差の吸収
